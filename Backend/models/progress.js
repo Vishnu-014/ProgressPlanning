@@ -63,7 +63,7 @@ const progressSchema = new Schema({
   plateOld: {
     type: String,
   },
-  print: {
+  printt: {
     type: String,
   },
   printType: {
@@ -166,6 +166,10 @@ const progressSchema = new Schema({
     default: ""
   },
   eyeletCDate: {
+    type: String,
+    default: ""
+  },
+  tapeCDate: {
     type: String,
     default: ""
   },

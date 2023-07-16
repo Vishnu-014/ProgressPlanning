@@ -26,7 +26,7 @@ const formatDate = (dateString) => {
   return `${day}-${month}-${year}`;
 };
 
-const EmbossProgress = ({ item, ordersList, getOrder }) => {
+const EmbossProgress = ({ item, ordersList, getOrder, setUpdate }) => {
   // console.log('====================================');
   // console.log(item);
   // console.log('====================================');
@@ -37,18 +37,24 @@ const EmbossProgress = ({ item, ordersList, getOrder }) => {
     progress: options[0],
   });
 
-  const submitHandler = () => {
-    let date = formatDate(new Date())
-    console.log(date);
-    let order = {};
-    order = ordersList.find((i) => i.orderNo === progress.orderId);
-    order = {
-      ...order,
-      embossProgress: progress.progress,
-      embossCDate: date,
-    };
-    console.log(order);
-    getOrder(order);
+  const submitHandler = async () => {
+    let date = formatDate(new Date());
+  
+    const response = await fetch(
+      `http://localhost:5000/api/progress/embossprogress/${item._id}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          embossProgress: progress.progress,
+          embossCDate: date,
+        }),
+      }
+    );
+
+    setUpdate(true);
   };
 
   return (

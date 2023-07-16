@@ -1,5 +1,5 @@
-import React from 'react';
-import styled, {createGlobalStyle} from 'styled-components';
+import React, { useState, useEffect } from 'react';
+import styled, { createGlobalStyle } from 'styled-components';
 import { Link } from 'react-router-dom';
 import OrderProgressDetail from './OrderProgressDetail';
 
@@ -18,7 +18,6 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: space-evenly;
 `;
-
 
 const Title = styled.h1`
   text-align: center;
@@ -43,6 +42,18 @@ const Line = styled.div`
 `;
 
 const OrderProgress = ({ ordersList }) => {
+  const [orderDetails, setOrderDetails] = useState([]);
+
+  useEffect(() => {
+    const retiveList = async () => {
+      const response = await fetch('http://localhost:5000/api/progress');
+      const responseData = await response.json();
+      setOrderDetails(responseData.Progress);
+      // setUpdate(false);
+    };
+    retiveList();
+  }, []);
+
   return (
     <Container>
       <GlobalStyle />
@@ -54,10 +65,11 @@ const OrderProgress = ({ ordersList }) => {
       </Wrapper>
       <Line />
 
-      {ordersList.map((item) => {
+      {orderDetails.map((item) => {
         return (
           <Link
-            to="orderDetail" state={{item: item}}
+            to="orderDetail"
+            state={{ item: item }}
             style={{ textDecoration: 'none', color: 'inherit' }}
             key={item.orderNo}
           >

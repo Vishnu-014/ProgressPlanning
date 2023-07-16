@@ -26,7 +26,7 @@ const formatDate = (dateString) => {
   return `${day}-${month}-${year}`;
 };
 
-const PastingProgress = ({ item, ordersList, getOrder }) => {
+const PastingProgress = ({ item, ordersList, getOrder, setUpdate }) => {
   // console.log('====================================');
   // console.log(item);
   // console.log('====================================');
@@ -37,18 +37,24 @@ const PastingProgress = ({ item, ordersList, getOrder }) => {
     progress: options[0],
   });
 
-  const submitHandler = () => {
+  const submitHandler = async () => {
     let date = formatDate(new Date());
-    console.log(date);
-    let order = {};
-    order = ordersList.find((i) => i.orderNo === progress.orderId);
-    order = {
-      ...order,
-      pastingProgress: progress.progress,
-      pastingCDate: date,
-    };
-    console.log(order);
-    getOrder(order);
+
+    const response = await fetch(
+      `http://localhost:5000/api/progress/pastingprogress/${item._id}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          pastingProgress: progress.progress,
+          pastingCDate: date,
+        }),
+      }
+    );
+
+    setUpdate(true);
   };
 
   return (

@@ -26,7 +26,7 @@ const formatDate = (dateString) => {
   return `${day}-${month}-${year}`;
 };
 
-const LaminationProgress = ({ item, ordersList, getOrder }) => {
+const LaminationProgress = ({ item, ordersList, getOrder, setUpdate }) => {
   // console.log('====================================');
   // console.log(item);
   // console.log('====================================');
@@ -37,18 +37,37 @@ const LaminationProgress = ({ item, ordersList, getOrder }) => {
     progress: options[0],
   });
 
-  const submitHandler = () => {
-    let date = formatDate(new Date())
-    console.log(date);
-    let order = {};
-    order = ordersList.find((i) => i.orderNo === progress.orderId);
-    order = {
-      ...order,
-      laminationProgress: progress.progress,
-      laminationCDate: date,
-    };
-    console.log(order);
-    getOrder(order);
+  // const submitHandler = () => {
+  //   let date = formatDate(new Date())
+  //   console.log(date);
+  //   let order = {};
+  //   order = ordersList.find((i) => i.orderNo === progress.orderId);
+  //   order = {
+  //     ...order,
+  //     laminationProgress: progress.progress,
+  //     laminationCDate: date,
+  //   };
+  //   console.log(order);
+  //   getOrder(order);
+  // };
+  const submitHandler = async () => {
+    let date = formatDate(new Date());
+
+    const response = await fetch(
+      `http://localhost:5000/api/progress/laminationprogress/${item._id}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          laminationProgress: progress.progress,
+          laminationCDate: date,
+        }),
+      }
+    );
+
+    setUpdate(true);
   };
 
   return (

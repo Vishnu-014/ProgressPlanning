@@ -26,7 +26,7 @@ const formatDate = (dateString) => {
   return `${day}-${month}-${year}`;
 };
 
-const DesignProcess = ({ item, ordersList, getOrder }) => {
+const DesignProcess = ({ item, ordersList, getOrder, setUpdate }) => {
   // console.log('====================================');
   // console.log(item);
   // console.log('====================================');
@@ -37,18 +37,24 @@ const DesignProcess = ({ item, ordersList, getOrder }) => {
     progress: options[0],
   });
 
-  const submitHandler = () => {
+  const submitHandler = async () => {
     let date = formatDate(new Date());
-    console.log(date);
-    let order = {};
-    order = ordersList.find((i) => i.orderNo === progress.orderId);
-    order = {
-      ...order,
-      designProgress: progress.progress,
-      designCDate: date,
-    };
-    console.log(order);
-    getOrder(order);
+  
+    const response = await fetch(
+      `http://localhost:5000/api/progress/designprogress/${item._id}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          designProgress: progress.progress,
+          designCDate: date,
+        }),
+      }
+    );
+
+    setUpdate(true);
   };
 
   return (
@@ -76,3 +82,14 @@ const DesignProcess = ({ item, ordersList, getOrder }) => {
 };
 
 export default DesignProcess;
+
+  // console.log(date);
+    // let order = {};
+    // order = ordersList.find((i) => i.orderNo === progress.orderId);
+    // order = {
+    //   ...order,
+    //   designProgress: progress.progress,
+    //   designCDate: date,
+    // };
+    // console.log(order);
+    // getOrder(order);

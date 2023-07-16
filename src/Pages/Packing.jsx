@@ -1,12 +1,13 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-//import Button from '../components/UI/Button/Button';
+
 
 import './table.css';
-import LaminationProgress from '../components/LaminationProgress';
-import UvProgress from '../components/UvProgress';
-import TapeProgress from '../components/TapeProgress';
 import PackingProgress from '../components/PackingProgress';
+
+import { DateRangePicker } from 'react-date-range';
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -63,68 +64,158 @@ const Title = styled.h1`
   margin-bottom: 1rem;
 `;
 
-const Button = styled.button`
-  display: flex;
-  position: absolute;
-  top: 0;
-  right: 0;
-  background-color: #b23b3b;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-right: 20px;
-  box-shadow: 6px 4px 5px #00000040;
-`;
 
 const P = styled.p`
   display: inline;
   font-weight: 700;
 `;
 
+const Search = styled.input`
+  display: flex;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 230px;
+  height: 30px;
+  border: 0.4px solid #ccc;
+  border-radius: 10px;
+  background-color: #eeeeee;
+  align-items: center;
+  justify-content: center;
+  margin: 5px 90px;
+  padding: 1px 5px;
+  box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.15);
+`;
+
+const Button = styled.button`
+  display: flex;
+  position: absolute;
+  top: 6px;
+  right: 2px;
+  background-color: #068fff;
+  color: white;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 20px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
+`;
+
+const DateModal = styled.button`
+  display: flex;
+  position: absolute;
+  top: 6px;
+  left: 2px;
+  background-color: #ff6666;
+  color: white;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 20px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
+  z-index: 10;
+`;
+
+
+
 const Packing = ({ ordersList, getOrder }) => {
-  let orders = ordersList;
+  const [packingDetails, setPackingDetails] = useState([]);
+  const [update, setUpdate] = useState(false);
+  const [search, setSearch] = useState('');
 
-  let orderSorted = ordersList.sort(
-    (a, b) =>
-      new Date(...a.date.split('-').reverse()) -
-      new Date(...b.date.split('-').reverse())
-  );
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [dateOpen, setDateOpen] = useState(false);
 
-  orders = orderSorted;
-
-  const [loggedIn, setLoggedIn] = useState(true);
-
-  let storedUserLoggedd = localStorage.getItem('isLoggedIn');
-
+  const retiveList = async () => {
+    const response = await fetch('http://localhost:5000/api/progress');
+    const responseData = await response.json();
+    setPackingDetails(responseData.Progress);
+    setUpdate(false);
+  };
   useEffect(() => {
-    let storedUserLoggedd = localStorage.getItem('isLoggedIn');
-    if (storedUserLoggedd === '1') {
-      setLoggedIn(true);
+    retiveList();
+  }, [update]);
+
+  const searchHandler = () => {
+    const filter = packingDetails.filter(
+      (f) =>
+        f.name.toLowerCase() === search.toLowerCase() ||
+        f.packingProgress.toLowerCase() === search.toLowerCase() ||
+        f.packingCDate === search
+    );
+    setPackingDetails(filter);
+    setSearch('');
+
+    if (search === '') {
+      retiveList();
     }
-  }, []);
-
-  const loginHandler = (email, password) => {
-    // We should of course check email and password
-    // But it's just a dummy/ demo anyways
-    localStorage.setItem('isLoggedIn', '1');
-    setLoggedIn(true);
   };
 
-  const logoutHandler = () => {
-    setLoggedIn(false);
-    localStorage.removeItem('isLoggedIn');
+  const sortHandler = () => {
+    let orderSorted = packingDetails.sort(
+      (a, b) =>
+        new Date(...a.date.split('-').reverse()) -
+        new Date(...b.date.split('-').reverse())
+    );
+    console.log(orderSorted);
+    setPackingDetails(orderSorted);
   };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear().toString();
+
+    return `${day}-${month}-${year}`;
+  };
+
+  const handleSelect = async (date) => {
+    let startD = formatDate(date.selection.startDate);
+    let endD = formatDate(date.selection.endDate);
+
+    const response = await fetch('http://localhost:5000/api/progress');
+    const responseData = await response.json();
+
+    setPackingDetails(
+      responseData.Progress.filter((product) => {
+        let productDate = product['packingCDate'];
+        return productDate >= startD && productDate <= endD;
+      })
+    );
+
+    setStartDate(date.selection.startDate);
+    setEndDate(date.selection.endDate);
+  };
+
+  const selectionRange = {
+    startDate: startDate,
+    endDate: endDate,
+    key: 'selection',
+  };
+  
 
   return (
     <Fragment>
-      {/* {!loggedIn && <Login onLogin={loginHandler} />} */}
-      {loggedIn && (
+ 
         <Container>
           <GlobalStyle />
           <Title>Packing Progress</Title>
-          {/* <Button onClick={logoutHandler}>Logout</Button> */}
+          <Search
+          placeholder="Search"
+          onChange={(e) => setSearch(e.target.value)}
+          value={search}
+        />
+        <Button onClick={searchHandler}>Search</Button>
+        <DateModal onClick={() => setDateOpen(!dateOpen)}>Date 🗓</DateModal>
+        {dateOpen && (
+          <DateRangePicker ranges={[selectionRange]} onChange={handleSelect} />
+        )}
+          
+
           <Wrapper>
             <table className="result">
               <thead>
@@ -138,7 +229,7 @@ const Packing = ({ ordersList, getOrder }) => {
                 </tr>
               </thead>
               <tbody>
-                {orderSorted.map(
+                {packingDetails.map(
                   (item) =>
                     item.packing === 'yes' && (
                       <tr key={item.orderNo}>
@@ -150,8 +241,9 @@ const Packing = ({ ordersList, getOrder }) => {
                         <td>
                           <PackingProgress
                             item={item}
-                            ordersList={orders}
+                            ordersList={packingDetails}
                             getOrder={getOrder}
+                            setUpdate={setUpdate}
                           />
                         </td>
                       </tr>
@@ -161,7 +253,7 @@ const Packing = ({ ordersList, getOrder }) => {
             </table>
           </Wrapper>
         </Container>
-      )}
+    
     </Fragment>
   );
 };

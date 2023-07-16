@@ -104,6 +104,8 @@ function App() {
 
   const [ordersList, setOrdersList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [itemAdded, setItemAdded] = useState(false);
+  const [updatedItem, setUpdatedItem] = useState(false);
 
   const retriveList = async () => {
     setLoading(true);
@@ -122,11 +124,12 @@ function App() {
 
   useEffect(() => {
     retriveList();
-  }, []);
+  }, [itemAdded, updatedItem]);
 
   const addOrder = async (orderedItem) => {
-    console.log("orderItem");
-    console.log(orderedItem);
+    // console.log("orderItem");
+    // console.log(orderedItem);
+    setItemAdded(true)
     // await fetch('http://localhost:5000/api/progress', {
     //   method: 'POST',
     //   headers: {
@@ -137,17 +140,25 @@ function App() {
     // setOrdersList([...ordersList, orderedItem])
   }
 
-  const getOrder = (updatedOrder) => {
-    let update = ordersList.find(i => i.orderNo === updatedOrder.orderNo)
-    update = updatedOrder
-    let updatedList = ordersList.filter(d => d.orderNo !== updatedOrder.orderNo)
-    // console.log(updatedList);
-    // console.log(update);
-    setOrdersList([...updatedList, update])
+  const getOrder = (updateItem) => {
+    // let update = ordersList.find(i => i.orderNo === updatedOrder.orderNo)
+    // update = updatedOrder
+    // let updatedList = ordersList.filter(d => d.orderNo !== updatedOrder.orderNo)
+    // // console.log(updatedList);
+    // // console.log(update);
+    // setOrdersList([...updatedList, update])
+    // setUpdatedItem(updateItem)
+    // if (updateItem === '1') {
+    //   setUpdatedItem('0')
+    //   setItemAdded(true)
+    // } 
+    // console.log('====================================');
+    // console.log(updateItem);
+    // console.log('====================================');
+    setItemAdded(true)
+    setUpdatedItem(true)
   }
-  console.log('====================================');
-  console.log(ordersList);
-  console.log('====================================');
+
 
 
   return (

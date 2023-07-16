@@ -26,7 +26,7 @@ const formatDate = (dateString) => {
   return `${day}-${month}-${year}`;
 };
 
-const PlateProgress = ({ item, ordersList, getOrder }) => {
+const PlateProgress = ({ item, ordersList, getOrder, setUpdate }) => {
   // console.log('====================================');
   // console.log(item);
   // console.log('====================================');
@@ -37,18 +37,25 @@ const PlateProgress = ({ item, ordersList, getOrder }) => {
     progress: options[0],
   });
 
-  const submitHandler = () => {
+  const submitHandler = async () => {
     let date = formatDate(new Date());
-    console.log(date);
-    let order = {};
-    order = ordersList.find((i) => i.orderNo === progress.orderId);
-    order = {
-      ...order,
-      plateProgress: progress.progress,
-      plateCDate: date,
-    };
-    console.log(order);
-    getOrder(order);
+    console.log('orders id');
+    console.log(item._id);
+    const response = await fetch(
+      `http://localhost:5000/api/progress/plateprogress/${item._id}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          plateProgress: progress.progress,
+          plateCDate: date,
+        }),
+      }
+    );
+
+    setUpdate(true);
   };
 
   return (

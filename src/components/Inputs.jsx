@@ -304,7 +304,7 @@ const Inputs = ({ orderedItemsList, addOrder }) => {
     // console.log(JSON.stringify(Order));
     // console.log('====================================');
 
-    await fetch('http://localhost:5000/api/progress/', {
+    await fetch('http://localhost:5000/api/progress', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

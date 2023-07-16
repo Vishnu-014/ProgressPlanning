@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 
 const Select = styled.select`
@@ -26,7 +26,7 @@ const formatDate = (dateString) => {
   return `${day}-${month}-${year}`;
 };
 
-const OrderProcess = ({ item, ordersList, getOrder }) => {
+const OrderProcess = ({ item, ordersList, getOrder, setUpdate }) => {
   // console.log('====================================');
   // console.log(item);
   // console.log('====================================');
@@ -37,18 +37,32 @@ const OrderProcess = ({ item, ordersList, getOrder }) => {
     progress: options[0],
   });
 
-  const submitHandler = () => {
-    let date = formatDate(new Date())
-    console.log(date);
-    let order = {};
-    order = ordersList.find((i) => i.orderNo === progress.orderId);
-    order = {
-      ...order,
-      boardPurchaseProgress: progress.progress,
-      boardPurchaseCDate: date,
-    };
-    console.log(order);
-    getOrder(order);
+  const submitHandler = async () => {
+    let date = formatDate(new Date());
+    console.log('orders id');
+    console.log(item._id);
+    // order = ordersList.find((i) => i.orderNo === progress.orderId);
+    // order = {
+    //   ...order,
+    //   boardPurchaseProgress: progress.progress,
+    //   boardPurchaseCDate: date,
+    // };
+    // console.log(order);
+    const response = await fetch(
+      `http://localhost:5000/api/progress/boardprogress/${item._id}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          boardPurchaseProgress: progress.progress,
+          boardPurchaseCDate: date,
+        }),
+      }
+    );
+    setUpdate(true);
+
   };
 
   return (
@@ -57,7 +71,7 @@ const OrderProcess = ({ item, ordersList, getOrder }) => {
         value={progress.progress}
         onChange={(e) =>
           setProgress({
-            orderId: item.orderNo,
+            orderId: item._id,
             progress: e.target.value,
           })
         }
