@@ -32,7 +32,6 @@ const Select = styled.select`
   border-radius: 5px;
 `;
 
-
 const OrderNo = styled.div`
   margin-left: -40px;
 `;
@@ -118,7 +117,6 @@ const DateModal = styled.button`
   z-index: 10;
 `;
 
-
 const DieCutting = ({ ordersList, getOrder }) => {
   const [dieCuttingDetails, setDieCuttingDetails] = useState([]);
   const [update, setUpdate] = useState(false);
@@ -176,7 +174,7 @@ const DieCutting = ({ ordersList, getOrder }) => {
     let startD = formatDate(date.selection.startDate);
     let endD = formatDate(date.selection.endDate);
 
-    const response = await fetch('http://localhost:5000/api/progress');
+    const response = await fetch('https://progres.onrender.com/api/progress');
     const responseData = await response.json();
 
     setDieCuttingDetails(
@@ -198,11 +196,10 @@ const DieCutting = ({ ordersList, getOrder }) => {
 
   return (
     <Fragment>
-
-        <Container>
-          <GlobalStyle />
-          <Title>Die Cutting Progress</Title>
-          <Search
+      <Container>
+        <GlobalStyle />
+        <Title>Die Cutting Progress</Title>
+        <Search
           placeholder="Search"
           onChange={(e) => setSearch(e.target.value)}
           value={search}
@@ -212,48 +209,47 @@ const DieCutting = ({ ordersList, getOrder }) => {
         {dateOpen && (
           <DateRangePicker ranges={[selectionRange]} onChange={handleSelect} />
         )}
-   
-          <Wrapper>
-            <table className="result">
-              <thead>
-                <tr>
-                  <th>Order Name</th>
-                  <th>Sample/Bulk</th>
-                  <th>Remarks</th>
-                  <th>Status</th>
-                  <th>Completed Date</th>
-                  <th>Progress</th>
-                </tr>
-              </thead>
-              <tbody>
-                {dieCuttingDetails.map(
-                  (item) =>
-                    item.dieCutting === 'yes' && (
-                      <tr key={item.orderNo}>
-                        <td>{item.name}</td>
-                        <td>{item.sampleBulk}</td>
-                        <td>
-                          {item.dieCuttingNewOld}
-                          {item.dieCuttingOld}
-                        </td>
-                        <td>{item.dieCuttingProgress}</td>
-                        <td>{item.dieCuttingCDate}</td>
-                        <td>
-                          <DieCuttingProgress
-                            item={item}
-                            ordersList={dieCuttingDetails}
-                            getOrder={getOrder}
-                            setUpdate={setUpdate}
-                          />
-                        </td>
-                      </tr>
-                    )
-                )}
-              </tbody>
-            </table>
-          </Wrapper>
-        </Container>
-    
+
+        <Wrapper>
+          <table className="result">
+            <thead>
+              <tr>
+                <th>Order Name</th>
+                <th>Sample/Bulk</th>
+                <th>Remarks</th>
+                <th>Status</th>
+                <th>Completed Date</th>
+                <th>Progress</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dieCuttingDetails.map(
+                (item) =>
+                  item.dieCutting === 'yes' && (
+                    <tr key={item.orderNo}>
+                      <td>{item.name}</td>
+                      <td>{item.sampleBulk}</td>
+                      <td>
+                        {item.dieCuttingNewOld}
+                        {item.dieCuttingOld}
+                      </td>
+                      <td>{item.dieCuttingProgress}</td>
+                      <td>{item.dieCuttingCDate}</td>
+                      <td>
+                        <DieCuttingProgress
+                          item={item}
+                          ordersList={dieCuttingDetails}
+                          getOrder={getOrder}
+                          setUpdate={setUpdate}
+                        />
+                      </td>
+                    </tr>
+                  )
+              )}
+            </tbody>
+          </table>
+        </Wrapper>
+      </Container>
     </Fragment>
   );
 };

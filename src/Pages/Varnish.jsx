@@ -176,7 +176,7 @@ const Varnish = ({ ordersList, getOrder }) => {
     let startD = formatDate(date.selection.startDate);
     let endD = formatDate(date.selection.endDate);
 
-    const response = await fetch('http://localhost:5000/api/progress');
+    const response = await fetch('https://progres.onrender.com/api/progress');
     const responseData = await response.json();
 
     setVarnishDetails(
@@ -211,7 +211,7 @@ const Varnish = ({ ordersList, getOrder }) => {
         {dateOpen && (
           <DateRangePicker ranges={[selectionRange]} onChange={handleSelect} />
         )}
-        
+
         <Wrapper>
           <table className="result">
             <thead>

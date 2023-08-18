@@ -149,7 +149,6 @@ const Print = ({ ordersList, getOrder }) => {
   const [endDate, setEndDate] = useState(new Date());
   const [dateOpen, setDateOpen] = useState(false);
 
-
   const retiveList = async () => {
     const response = await fetch('https://progres.onrender.com/api/progress');
     const responseData = await response.json();
@@ -198,7 +197,7 @@ const Print = ({ ordersList, getOrder }) => {
     let startD = formatDate(date.selection.startDate);
     let endD = formatDate(date.selection.endDate);
 
-    const response = await fetch('http://localhost:5000/api/progress');
+    const response = await fetch('https://progres.onrender.com/api/progress');
     const responseData = await response.json();
 
     setPrintDetails(
@@ -221,8 +220,8 @@ const Print = ({ ordersList, getOrder }) => {
   const searchPrintHandler = () => {
     const filter = printDetails.filter((f) =>
       f.printType.map((print) => {
-        console.log(print.value.toLowerCase() + "he");
-        console.log(printFilter.toLowerCase() + "he");
+        console.log(print.value.toLowerCase() + 'he');
+        console.log(printFilter.toLowerCase() + 'he');
         return print.value.toLowerCase() === printFilter.toLowerCase();
       })
     );

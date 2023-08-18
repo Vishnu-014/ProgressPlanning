@@ -1,7 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 
-
 import './table.css';
 import PackingProgress from '../components/PackingProgress';
 
@@ -64,7 +63,6 @@ const Title = styled.h1`
   margin-bottom: 1rem;
 `;
 
-
 const P = styled.p`
   display: inline;
   font-weight: 700;
@@ -117,8 +115,6 @@ const DateModal = styled.button`
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
   z-index: 10;
 `;
-
-
 
 const Packing = ({ ordersList, getOrder }) => {
   const [packingDetails, setPackingDetails] = useState([]);
@@ -177,19 +173,18 @@ const Packing = ({ ordersList, getOrder }) => {
     let startD = formatDate(date.selection.startDate);
     let endD = formatDate(date.selection.endDate);
 
-    const response = await fetch('http://localhost:5000/api/progress');
+    const response = await fetch('https://progres.onrender.com/api/progress');
     const responseData = await response.json();
 
-    
     setPackingDetails(
       responseData.Progress.filter((product) => {
         let productDate = product['packingCDate'];
-        console.log("p"+productDate);
+        console.log('p' + productDate);
         return productDate >= startD && productDate <= endD;
       })
-      );
-      
-      console.log(startD, endD);
+    );
+
+    console.log(startD, endD);
     setStartDate(date.selection.startDate);
     setEndDate(date.selection.endDate);
   };
@@ -199,15 +194,13 @@ const Packing = ({ ordersList, getOrder }) => {
     endDate: endDate,
     key: 'selection',
   };
-  
 
   return (
     <Fragment>
- 
-        <Container>
-          <GlobalStyle />
-          <Title>Packing Progress</Title>
-          <Search
+      <Container>
+        <GlobalStyle />
+        <Title>Packing Progress</Title>
+        <Search
           placeholder="Search"
           onChange={(e) => setSearch(e.target.value)}
           value={search}
@@ -217,46 +210,44 @@ const Packing = ({ ordersList, getOrder }) => {
         {dateOpen && (
           <DateRangePicker ranges={[selectionRange]} onChange={handleSelect} />
         )}
-          
 
-          <Wrapper>
-            <table className="result">
-              <thead>
-                <tr>
-                  <th>Order Name</th>
-                  <th>Sample/Bulk</th>
-                  <th>Remarks</th>
-                  <th>Status</th>
-                  <th>Completed Date</th>
-                  <th>Progress</th>
-                </tr>
-              </thead>
-              <tbody>
-                {packingDetails.map(
-                  (item) =>
-                    item.packing === 'yes' && (
-                      <tr key={item.orderNo}>
-                        <td>{item.name}</td>
-                        <td>{item.sampleBulk}</td>
-                        <td>-</td>
-                        <td>{item.packingProgress}</td>
-                        <td>{item.packingCDate}</td>
-                        <td>
-                          <PackingProgress
-                            item={item}
-                            ordersList={packingDetails}
-                            getOrder={getOrder}
-                            setUpdate={setUpdate}
-                          />
-                        </td>
-                      </tr>
-                    )
-                )}
-              </tbody>
-            </table>
-          </Wrapper>
-        </Container>
-    
+        <Wrapper>
+          <table className="result">
+            <thead>
+              <tr>
+                <th>Order Name</th>
+                <th>Sample/Bulk</th>
+                <th>Remarks</th>
+                <th>Status</th>
+                <th>Completed Date</th>
+                <th>Progress</th>
+              </tr>
+            </thead>
+            <tbody>
+              {packingDetails.map(
+                (item) =>
+                  item.packing === 'yes' && (
+                    <tr key={item.orderNo}>
+                      <td>{item.name}</td>
+                      <td>{item.sampleBulk}</td>
+                      <td>-</td>
+                      <td>{item.packingProgress}</td>
+                      <td>{item.packingCDate}</td>
+                      <td>
+                        <PackingProgress
+                          item={item}
+                          ordersList={packingDetails}
+                          getOrder={getOrder}
+                          setUpdate={setUpdate}
+                        />
+                      </td>
+                    </tr>
+                  )
+              )}
+            </tbody>
+          </table>
+        </Wrapper>
+      </Container>
     </Fragment>
   );
 };

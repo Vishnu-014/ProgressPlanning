@@ -8,7 +8,6 @@ import { DateRangePicker } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 
-
 const GlobalStyle = createGlobalStyle`
   body {
     background: #fff;
@@ -64,7 +63,6 @@ const Title = styled.h1`
   margin-bottom: 1rem;
 `;
 
-
 const P = styled.p`
   display: inline;
   font-weight: 700;
@@ -119,7 +117,6 @@ const DateModal = styled.button`
 `;
 
 const ScreenReady = ({ ordersList, getOrder }) => {
-  
   const [screenReadyDetails, setScreenReadyDetails] = useState([]);
   const [update, setUpdate] = useState(false);
   const [search, setSearch] = useState('');
@@ -176,7 +173,7 @@ const ScreenReady = ({ ordersList, getOrder }) => {
     let startD = formatDate(date.selection.startDate);
     let endD = formatDate(date.selection.endDate);
 
-    const response = await fetch('http://localhost:5000/api/progress');
+    const response = await fetch('https://progres.onrender.com/api/progress');
     const responseData = await response.json();
 
     setScreenReadyDetails(
@@ -198,11 +195,10 @@ const ScreenReady = ({ ordersList, getOrder }) => {
 
   return (
     <Fragment>
-      
-        <Container>
-          <GlobalStyle />
-          <Title>Screen Ready Progress</Title>
-          <Search
+      <Container>
+        <GlobalStyle />
+        <Title>Screen Ready Progress</Title>
+        <Search
           placeholder="Search"
           onChange={(e) => setSearch(e.target.value)}
           value={search}
@@ -212,48 +208,47 @@ const ScreenReady = ({ ordersList, getOrder }) => {
         {dateOpen && (
           <DateRangePicker ranges={[selectionRange]} onChange={handleSelect} />
         )}
-          {/* <Button onClick={logoutHandler}>Logout</Button> */}
-          <Wrapper>
-            <table className="result">
-              <thead>
-                <tr>
-                  <th>Order Name</th>
-                  <th>Sample/Bulk</th>
-                  <th>Remarks</th>
-                  <th>Status</th>
-                  <th>Completed Date</th>
-                  <th>Progress</th>
-                </tr>
-              </thead>
-              <tbody>
-                {screenReadyDetails.map(
-                  (item) =>
-                    item.screenPreparation === 'yes' && (
-                      <tr key={item.orderNo}>
-                        <td>{item.name}</td>
-                        <td>{item.sampleBulk}</td>
-                        <td>
-                          UV: {item.uv} <br />
-                          Emboss & Deboss: {item.emboss}
-                        </td>
-                        <td>{item.screenPreparationProgress}</td>
-                        <td>{item.screenPreparationCDate}</td>
-                        <td>
-                          <ScreenReadyProgress
-                            item={item}
-                            ordersList={screenReadyDetails}
-                            getOrder={getOrder}
-                            setUpdate={setUpdate}
-                          />
-                        </td>
-                      </tr>
-                    )
-                )}
-              </tbody>
-            </table>
-          </Wrapper>
-        </Container>
-
+        {/* <Button onClick={logoutHandler}>Logout</Button> */}
+        <Wrapper>
+          <table className="result">
+            <thead>
+              <tr>
+                <th>Order Name</th>
+                <th>Sample/Bulk</th>
+                <th>Remarks</th>
+                <th>Status</th>
+                <th>Completed Date</th>
+                <th>Progress</th>
+              </tr>
+            </thead>
+            <tbody>
+              {screenReadyDetails.map(
+                (item) =>
+                  item.screenPreparation === 'yes' && (
+                    <tr key={item.orderNo}>
+                      <td>{item.name}</td>
+                      <td>{item.sampleBulk}</td>
+                      <td>
+                        UV: {item.uv} <br />
+                        Emboss & Deboss: {item.emboss}
+                      </td>
+                      <td>{item.screenPreparationProgress}</td>
+                      <td>{item.screenPreparationCDate}</td>
+                      <td>
+                        <ScreenReadyProgress
+                          item={item}
+                          ordersList={screenReadyDetails}
+                          getOrder={getOrder}
+                          setUpdate={setUpdate}
+                        />
+                      </td>
+                    </tr>
+                  )
+              )}
+            </tbody>
+          </table>
+        </Wrapper>
+      </Container>
     </Fragment>
   );
 };
