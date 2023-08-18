@@ -102,6 +102,20 @@ const Button = styled.button`
   margin-right: 20px;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
 `;
+const Button1 = styled.button`
+  display: flex;
+  position: absolute;
+  top: 6px;
+  left: 170px;
+  background-color: #068fff;
+  color: white;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 20px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
+`;
 
 const DateModal = styled.button`
   display: flex;
@@ -119,17 +133,25 @@ const DateModal = styled.button`
   z-index: 10;
 `;
 
+const SelectOption = styled.select`
+  margin: 0 10px;
+  border-radius: 5px;
+`;
+
 const Print = ({ ordersList, getOrder }) => {
+  const options = ['GTO', 'SRM', '5ColorPrinter'];
   const [printDetails, setPrintDetails] = useState([]);
   const [update, setUpdate] = useState(false);
   const [search, setSearch] = useState('');
+  const [printFilter, setPrintFilter] = useState(options[0]);
 
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [dateOpen, setDateOpen] = useState(false);
 
+
   const retiveList = async () => {
-    const response = await fetch('http://localhost:5000/api/progress');
+    const response = await fetch('https://progres.onrender.com/api/progress');
     const responseData = await response.json();
     setPrintDetails(responseData.Progress);
     setUpdate(false);
@@ -196,6 +218,22 @@ const Print = ({ ordersList, getOrder }) => {
     key: 'selection',
   };
 
+  const searchPrintHandler = () => {
+    const filter = printDetails.filter((f) =>
+      f.printType.map((print) => {
+        console.log(print.value.toLowerCase() + "he");
+        console.log(printFilter.toLowerCase() + "he");
+        return print.value.toLowerCase() === printFilter.toLowerCase();
+      })
+    );
+    console.log(filter);
+    setPrintDetails(filter);
+
+    if (search === []) {
+      retiveList();
+    }
+  };
+
   return (
     <Fragment>
       {/* {!loggedIn && <Login onLogin={loginHandler} />} */}
@@ -203,6 +241,19 @@ const Print = ({ ordersList, getOrder }) => {
       <Container>
         <GlobalStyle />
         <Title>Print Progress</Title>
+
+        {/* <SelectOption
+          value={printFilter}
+          onChange={(e) => setPrintFilter(e.target.value)}
+        >
+          {options.map((value) => (
+            <option value={value} key={value}>
+              {value}
+            </option>
+          ))}
+        </SelectOption> */}
+        {/* <Button1 onClick={searchPrintHandler}>Search</Button1> */}
+
         <Search
           placeholder="Search"
           onChange={(e) => setSearch(e.target.value)}

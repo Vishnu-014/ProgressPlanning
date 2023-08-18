@@ -1,14 +1,16 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, useRef } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import OrderProcess from '../components/OrderProcess';
 import Login from '../components/Login/Login';
-//import Button from '../components/UI/Button/Button';
+import { VscChevronLeft } from 'react-icons/vsc';
+import { useReactToPrint } from 'react-to-print';
 
 import './table.css';
 
 import { DateRangePicker } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
+import { useNavigate } from 'react-router-dom';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -118,7 +120,39 @@ const DateModal = styled.button`
   z-index: 10;
 `;
 
+const Back = styled.button`
+  display: flex;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background-color: #068fff;
+  color: white;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 20px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
+`;
+
+const PrintBtn = styled.button`
+  display: flex;
+  position: absolute;
+  top: 9px;
+  left: 120px;
+  background-color: #068fff;
+  color: white;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 20px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
+`;
+
 const BoardPurchase = ({ ordersList, getOrder }) => {
+  const navigate = useNavigate();
+
   const [boardProgressDetails, setBoardProgressDetails] = useState([]);
   const [update, setUpdate] = useState(false);
   const [search, setSearch] = useState('');
@@ -135,7 +169,7 @@ const BoardPurchase = ({ ordersList, getOrder }) => {
   );
 
   const retiveList = async () => {
-    const response = await fetch('http://localhost:5000/api/progress');
+    const response = await fetch('https://progres.onrender.com/api/progress');
     const responseData = await response.json();
     setBoardProgressDetails(responseData.Progress);
     setUpdate(false);
@@ -144,7 +178,6 @@ const BoardPurchase = ({ ordersList, getOrder }) => {
   useEffect(() => {
     retiveList();
   }, [update]);
-
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -159,12 +192,17 @@ const BoardPurchase = ({ ordersList, getOrder }) => {
     let startD = formatDate(date.selection.startDate);
     let endD = formatDate(date.selection.endDate);
 
-    const response = await fetch('http://localhost:5000/api/progress');
+    const response = await fetch('https://progres.onrender.com/api/progress');
     const responseData = await response.json();
 
+    console.log('====================================');
+    console.log(startD);
+    console.log(endD);
+    console.log('====================================');
     setBoardProgressDetails(
       responseData.Progress.filter((product) => {
         let productDate = product['boardPurchaseCDate'];
+        console.log(productDate + ' ' + 'hel');
         return productDate >= startD && productDate <= endD;
       })
     );
@@ -194,12 +232,31 @@ const BoardPurchase = ({ ordersList, getOrder }) => {
     }
   };
 
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
   return (
     <Fragment>
+      {/* <ReactToPrint
+        trigger={() => {
+          return <PrintBtn>Print</PrintBtn>;
+        }}
+        content={() => this.componentRef}
+        documentTitle="Board Purchase"
+        pageStyle="print"
+      /> */}
+
       {/* {!loggedIn && <Login onLogin={loginHandler} />} */}
-      <Container>
+      <Container ref={componentRef}>
         <GlobalStyle />
         <Title>Board Purchase Progress</Title>
+        {/* <Back onClick={() => navigate(-1)}>
+          <VscChevronLeft size={16} />
+          Back
+        </Back> */}
+
         <Search
           placeholder="Search"
           onChange={(e) => setSearch(e.target.value)}
@@ -220,7 +277,7 @@ const BoardPurchase = ({ ordersList, getOrder }) => {
                 <th>Sample/Bulk</th>
                 <th>Remarks</th>
                 <th>Status</th>
-                <th>Completed Date</th>
+                <th>Completed</th>
                 <th>Progress</th>
               </tr>
             </thead>

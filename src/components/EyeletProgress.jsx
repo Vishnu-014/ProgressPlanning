@@ -41,7 +41,7 @@ const EyeletProgress = ({ item, ordersList, getOrder, setUpdate }) => {
     let date = formatDate(new Date());
 
     const response = await fetch(
-      `http://localhost:5000/api/progress/eyelet/${item._id}`,
+      `https://progres.onrender.com/api/progress/eyelet/${item._id}`,
       {
         method: 'PATCH',
         headers: {

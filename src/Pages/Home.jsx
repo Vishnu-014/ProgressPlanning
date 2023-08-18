@@ -31,7 +31,7 @@ const Button = styled.button`
   width: 200px;
   /* margin: 0 auto; */
   background: transparent;
-  border-radius: 3px;
+  border-radius: 10px;
   border: 2px solid #348525;
   background-color: #1F8A70;
   color: #fff;

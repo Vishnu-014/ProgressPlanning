@@ -1,10 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-//import Button from '../components/UI/Button/Button';
 
 import './table.css';
-import LaminationProgress from '../components/LaminationProgress';
-import UvProgress from '../components/UvProgress';
 import ScreenReadyProgress from '../components/ScreenReadyProgress';
 
 import { DateRangePicker } from 'react-date-range';
@@ -132,7 +129,7 @@ const ScreenReady = ({ ordersList, getOrder }) => {
   const [dateOpen, setDateOpen] = useState(false);
 
   const retiveList = async () => {
-    const response = await fetch('http://localhost:5000/api/progress');
+    const response = await fetch('https://progres.onrender.com/api/progress');
     const responseData = await response.json();
     setScreenReadyDetails(responseData.Progress);
     setUpdate(false);

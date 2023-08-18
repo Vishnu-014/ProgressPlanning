@@ -130,7 +130,7 @@ const Packing = ({ ordersList, getOrder }) => {
   const [dateOpen, setDateOpen] = useState(false);
 
   const retiveList = async () => {
-    const response = await fetch('http://localhost:5000/api/progress');
+    const response = await fetch('https://progres.onrender.com/api/progress');
     const responseData = await response.json();
     setPackingDetails(responseData.Progress);
     setUpdate(false);
@@ -180,13 +180,16 @@ const Packing = ({ ordersList, getOrder }) => {
     const response = await fetch('http://localhost:5000/api/progress');
     const responseData = await response.json();
 
+    
     setPackingDetails(
       responseData.Progress.filter((product) => {
         let productDate = product['packingCDate'];
+        console.log("p"+productDate);
         return productDate >= startD && productDate <= endD;
       })
-    );
-
+      );
+      
+      console.log(startD, endD);
     setStartDate(date.selection.startDate);
     setEndDate(date.selection.endDate);
   };

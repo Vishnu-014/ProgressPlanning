@@ -94,6 +94,7 @@ const options = [
   { value: 'SRM', label: 'SRM' },
   { value: '5ColorPrinter', label: '5 Color Printer' },
   { value: 'GTO', label: 'GTO' },
+  { value: 'GTO', label: 'GTO' },
 ];
 const optionsLamination = ['Wet', 'Glass', 'Matte', 'Velvet', 'none'];
 const optionssType = ['MT', 'PT', 'MKT'];
@@ -304,7 +305,7 @@ const Inputs = ({ orderedItemsList, addOrder }) => {
     // console.log(JSON.stringify(Order));
     // console.log('====================================');
 
-    await fetch('http://localhost:5000/api/progress', {
+    await fetch('https://progres.onrender.com/api/progress', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
+import { VscChevronLeft } from 'react-icons/vsc';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -17,6 +18,7 @@ const Container = styled.div`
   gap: 20px;
   justify-content: space-evenly;
   flex-wrap: wrap;
+  margin: 50px;
 `;
 
 const Card = styled.div`
@@ -37,13 +39,34 @@ const Title = styled.h2``;
 const Button = styled.button`
 `;
 
+const Back = styled.button`
+  display: flex;
+  position: absolute;
+  top: 10px;
+  left: 30px;
+  background-color: #068fff;
+  color: white;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 20px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
+`;
+
 const Progress = ({ ordersList }) => {
   console.log(ordersList);
+
+  const navigate = useNavigate();
 
   return (
     <Container>
       <GlobalStyle />
       {/* DESIGN */}
+      <Back onClick={() => navigate(-1)}>
+        <VscChevronLeft size={16} />
+        Back
+      </Back>
       <Link to="design" style={{ textDecoration: 'none', color: 'inherit' }}>
         <Card>
           <Title>Design</Title>

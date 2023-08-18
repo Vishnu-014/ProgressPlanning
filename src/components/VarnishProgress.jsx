@@ -42,7 +42,7 @@ const VarnishProgress = ({ item, ordersList, getOrder, setUpdate }) => {
     console.log('orders id');
     console.log(item._id);
     const response = await fetch(
-      `http://localhost:5000/api/progress/varnishprogress/${item._id}`,
+      `https://progres.onrender.com/api/progress/varnishprogress/${item._id}`,
       {
         method: 'PATCH',
         headers: {

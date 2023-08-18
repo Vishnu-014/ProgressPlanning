@@ -21,6 +21,9 @@ import Emboss from './Pages/Emboss';
 import Eyelet from './Pages/Eyelet';
 import Tape from './Pages/Tape';
 import ScreenReady from './Pages/ScreenReady';
+import Loading from './Pages/Loading';
+
+
 
 const orders_placed = [
   {
@@ -109,7 +112,7 @@ function App() {
 
   const retriveList = async () => {
     setLoading(true);
-    const response = await fetch('http://localhost:5000/api/progress');
+    const response = await fetch('https://progres.onrender.com/api/progress');
 
     const responseData = await response.json();
 
@@ -164,6 +167,7 @@ function App() {
   return (
     <BrowserRouter>
       <Container>
+          {loading && <Loading />}
         <Routes>
           {!loading &&
             <Route path="/">

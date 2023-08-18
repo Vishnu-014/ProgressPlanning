@@ -1,9 +1,11 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-//import Button from '../components/UI/Button/Button';
 
 import './table.css';
 import FoilProgress from '../components/FoilProgress';
+import { DateRangePicker } from 'react-date-range';
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -123,7 +125,7 @@ const Foil = ({ ordersList, getOrder }) => {
   const [dateOpen, setDateOpen] = useState(false);
 
   const retiveList = async () => {
-    const response = await fetch('http://localhost:5000/api/progress');
+    const response = await fetch('https://progres.onrender.com/api/progress');
     const responseData = await response.json();
     setFoilDetails(responseData.Progress);
     setUpdate(false);

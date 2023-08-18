@@ -49,7 +49,7 @@ const OrderProcess = ({ item, ordersList, getOrder, setUpdate }) => {
     // };
     // console.log(order);
     const response = await fetch(
-      `http://localhost:5000/api/progress/boardprogress/${item._id}`,
+      `https://progres.onrender.com/api/progress/boardprogress/${item._id}`,
       {
         method: 'PATCH',
         headers: {
@@ -62,7 +62,6 @@ const OrderProcess = ({ item, ordersList, getOrder, setUpdate }) => {
       }
     );
     setUpdate(true);
-
   };
 
   return (

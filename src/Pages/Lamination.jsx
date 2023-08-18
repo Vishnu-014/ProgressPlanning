@@ -127,7 +127,7 @@ const Lamination = ({ ordersList, getOrder }) => {
   const [dateOpen, setDateOpen] = useState(false);
 
   const retiveList = async () => {
-    const response = await fetch('http://localhost:5000/api/progress');
+    const response = await fetch('https://progres.onrender.com/api/progress');
     const responseData = await response.json();
     setLaminationDetails(responseData.Progress);
     setUpdate(false);
